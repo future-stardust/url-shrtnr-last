@@ -1,17 +1,15 @@
-# {Team Name} - URL shortener {🧪}
-
-This is a template project for "Software testing" course labs. Use it to create your own repo and 
-fulfill/rewrite this document (at least, replace everything in `{...}`).
+# LAST - URL shortener
 
 ## Students group
 
-- {Surname Name (in Ukrainian)} {email}
-- ...
-- {Surname Name (in Ukrainian)} {email}
+- Логвиненко Тимур - `logvinenko814@gmail.com`
+- Афонін Олексій - `erhatod@gmail.com`
+- Бордюг Олександр - `John57s422@gmail.com`
+- Трудов Антон - `trudovanton1@gmail.com`
 
 ## Design document
 
-The [design document]({Place actual link to the design document Google Docs file here}) that
+The [design document] that
 describes architecture and implementation details of this project.
 
 ### System structure
@@ -53,7 +51,6 @@ plugin. We use Google rules (local copy `./config/checkstyle/checkstyle.xml`).
 1. Clone this repo
 2. Open the project directory in IntelliJ Idea Edu
 3. Configure IDE code style settings
-  
     1. Open `Settings`
     2. Go to `Editor` -> `Code Style` -> `Import Scheme`
        ![Settings screenshot](./media/code-style-import.png)
@@ -62,7 +59,7 @@ plugin. We use Google rules (local copy `./config/checkstyle/checkstyle.xml`).
 ## Commit messages
 
 Write commit messages accordingly by [7 rules of good commit messages].
-  
+
 [JDK]: https://en.wikipedia.org/wiki/Java_Development_Kit
 [IntelliJ Idea Edu]: https://www.jetbrains.com/idea-edu/
 [sdkman]: https://sdkman.io/
@@ -71,3 +68,4 @@ Write commit messages accordingly by [7 rules of good commit messages].
 [Micronaut]: https://micronaut.io/
 [checkstyle]: https://checkstyle.org/
 [Checkstyle-IDEA]: https://plugins.jetbrains.com/plugin/1065-checkstyle-idea
+[design document]: https://docs.google.com/document/d/13W4FlCXHX2UUtmR669XHrOxqEZIgpP_PykLHg-WQfbw/edit?usp=sharing
