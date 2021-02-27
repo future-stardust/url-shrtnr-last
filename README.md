@@ -5,7 +5,7 @@
 - Логвиненко Тимур - `logvinenko814@gmail.com`
 - Афонін Олексій - `erhatod@gmail.com`
 - Бордюг Олександр - `John57s422@gmail.com`
-- Трудов Антон - `trudovanton1@gmail.com`
+- Трудов Антон - `trudovanton1@gmail.com` 
 
 ## Design document
 
