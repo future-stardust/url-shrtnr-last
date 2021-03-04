@@ -3,6 +3,7 @@ package edu.kpi.testcourse.repository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import edu.kpi.testcourse.model.User;
+import io.micronaut.context.annotation.Property;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,10 +25,17 @@ public class UserRepositoryImpl implements UserRepository {
   private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
   private final Map<String, User> users;
   private final Gson gson;
-  private final String fileName = "users.txt";
+  private final File file;
 
-  public UserRepositoryImpl() {
-    this.gson = new Gson();
+  /**
+   * This constructor is used by the DI to create singleton.
+   *
+   * @param gson class for serializing and deserializing data
+   * @param fileName file name for storing users
+   */
+  public UserRepositoryImpl(Gson gson, @Property(name = "db.users.filename") String fileName) {
+    this.gson = gson;
+    this.file = new File(fileName);
     this.users = initFileStorage();
   }
 
@@ -49,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   private void writeUsersToFile() {
-    try (FileWriter fileWriter = new FileWriter(fileName)) {
+    try (FileWriter fileWriter = new FileWriter(file)) {
       fileWriter.write(gson.toJson(users));
     } catch (IOException e) {
       logger.error("Can not write users to file");
@@ -58,7 +66,6 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   private Map<String, User> readUsersFromFile() {
-    File file = new File(fileName);
     Type type = new TypeToken<Map<String, User>>(){}.getType();
     try {
       String json = Files.readString(file.toPath());
@@ -70,7 +77,6 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   private Map<String, User> initFileStorage() {
-    File file = new File(fileName);
     try {
       if (file.createNewFile()) {
         logger.info("File for user storage has been created");

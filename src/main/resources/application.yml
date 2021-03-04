@@ -12,3 +12,7 @@ micronaut:
           secret:
             generator:
               secret: supaDupaSecretThatNobodyWillKnow
+
+db:
+  users:
+    filename: users.txt
