@@ -5,16 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.kpi.testcourse.model.User;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import java.io.File;
 import java.util.Optional;
 import javax.inject.Inject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+@TestInstance(Lifecycle.PER_CLASS)
 @MicronautTest
 class UserRepositoryTest {
 
   @Inject
-  private UserRepository userRepository;
+  UserRepository userRepository;
+  @Property(name = "db.users.filename")
+  String fileName;
 
   @Test
   void testContainsUserWithEmail() {
@@ -48,5 +56,11 @@ class UserRepositoryTest {
       "Repository returns user but we did not save it"
     );
     assertEquals(user, user1.get(), "User data does not match");
+  }
+
+  @AfterAll
+  void cleanDatabase() {
+    File file = new File(fileName);
+    if (!file.delete()) throw new Error("Can not delete file after testing");
   }
 }
