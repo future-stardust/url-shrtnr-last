@@ -16,3 +16,5 @@ micronaut:
 db:
   users:
     filename: users.txt
+  sessions:
+    filename: sessions.txt
