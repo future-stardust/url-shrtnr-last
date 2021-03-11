@@ -45,6 +45,7 @@ class UserControllerTest {
       .exchange(HttpRequest.POST("/users/signin", new User("user1@mail.com", "pass123")), String.class);
 
     assertEquals(response.status(), HttpStatus.OK);
+    Assertions.assertThat(response.body()).matches("\\{\"access_token\":\"[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\"}");
   }
 
   @Test
