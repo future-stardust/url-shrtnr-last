@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +70,8 @@ public class UserRepositoryImpl implements UserRepository {
     Type type = new TypeToken<Map<String, User>>(){}.getType();
     try {
       String json = Files.readString(file.toPath());
-      return gson.fromJson(json, type);
+      Map<String, User> users = gson.fromJson(json, type);
+      return users == null ? new HashMap<>() : users;
     } catch (IOException e) {
       logger.error("Can not read users from file");
       throw new Error("Error while reading users from file");
