@@ -86,7 +86,8 @@ public class ActiveSessionRepositoryImpl implements ActiveSessionRepository {
     Type type = new TypeToken<List<String>>(){}.getType();
     try {
       String json = Files.readString(file.toPath());
-      return gson.fromJson(json, type);
+      List<String> sessions = gson.fromJson(json, type);
+      return sessions == null ? new LinkedList<>() : sessions;
     } catch (IOException e) {
       logger.error("Can not read sessions from file");
       throw new Error("Error while reading sessions from file");
