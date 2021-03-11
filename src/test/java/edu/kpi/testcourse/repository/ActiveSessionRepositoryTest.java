@@ -1,5 +1,6 @@
 package edu.kpi.testcourse.repository;
 
+import static edu.kpi.testcourse.repository.TestUtils.assertFileContentEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,11 +23,19 @@ class ActiveSessionRepositoryTest {
   String fileName;
 
   @Test
-  void testSaveJwt() {
+  void test() {
     sessionRepository.save("abc");
-    assertTrue(sessionRepository.contains("abc"));
-    sessionRepository.remove("abc");
-    assertFalse(sessionRepository.contains("abc"));
+    sessionRepository.save("xyz");
+
+    assertFileContentEquals("[\"abc\",\"xyz\"]", fileName);
+    assertTrue(sessionRepository.contains("abc"), "Storage must contain id that we saved");
+    assertTrue(sessionRepository.contains("xyz"), "Storage must contain id that we saved");
+    assertFalse(sessionRepository.contains("qwe"), "Storage must not contain id that we did not save");
+
+    sessionRepository.remove("xyz");
+    assertFileContentEquals("[\"abc\"]", fileName);
+    assertTrue(sessionRepository.contains("abc"), "Storage must contain id that we saved");
+    assertFalse(sessionRepository.contains("xyz"), "Storage must not contain id that we removed");
   }
 
   @AfterAll
