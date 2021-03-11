@@ -1,5 +1,7 @@
 package edu.kpi.testcourse.auth;
 
+import edu.kpi.testcourse.model.User;
+import edu.kpi.testcourse.repository.UserRepository;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationException;
@@ -11,6 +13,8 @@ import io.micronaut.security.authentication.UserDetails;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import java.util.ArrayList;
+import java.util.Optional;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.reactivestreams.Publisher;
 
@@ -21,16 +25,22 @@ import org.reactivestreams.Publisher;
 @Singleton
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
+  private final UserRepository userRepository;
+
+  @Inject
+  public AuthenticationProviderUserPassword(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
   @Override
   public Publisher<AuthenticationResponse> authenticate(
       @Nullable HttpRequest<?> httpRequest,
       AuthenticationRequest<?, ?> authenticationRequest
   ) {
-    // TODO Here you need to implement an actual authentication (ensure that the user is registered
-    //  and password is OK)
     return Flowable.create(emitter -> {
-      if (authenticationRequest.getIdentity().equals("sherlock")
-          && authenticationRequest.getSecret().equals("password")) {
+      Optional<User> user = userRepository
+          .getUserByEmail((String) authenticationRequest.getIdentity());
+      if (user.isPresent() && authenticationRequest.getSecret().equals(user.get().getPassword())) {
         emitter
           .onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));
         emitter.onComplete();
