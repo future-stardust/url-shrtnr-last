@@ -1,5 +1,6 @@
 package edu.kpi.testcourse.controller;
 
+import edu.kpi.testcourse.logic.UserService;
 import edu.kpi.testcourse.model.User;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -31,11 +32,31 @@ public class UserController {
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
   protected final Authenticator authenticator;
   protected final LoginHandler loginHandler;
+  private final UserService userService;
 
+  /**
+   * This constructor is used by the DI to create singleton.
+   *
+   * @param authenticator collects authentication providers
+   *                      ({@link edu.kpi.testcourse.auth.AuthenticationProviderUserPassword
+   *                      AuthenticationProviderUserPassword} in our case) that authenticate
+   * @param loginHandler handles response if login success or failed
+   * @param userService service for work with user
+   */
   @Inject
-  public UserController(Authenticator authenticator, LoginHandler loginHandler) {
+  public UserController(Authenticator authenticator, LoginHandler loginHandler,
+      UserService userService) {
     this.authenticator = authenticator;
     this.loginHandler = loginHandler;
+    this.userService = userService;
+  }
+
+  @Post("/signup")
+  @Secured(SecurityRule.IS_ANONYMOUS)
+  HttpResponse<?> signUp(@Valid @Body User user) throws Exception {
+    logger.info("Processing POST /users/signup request");
+    userService.registerUser(user);
+    return HttpResponse.status(HttpStatus.CREATED);
   }
 
   @Post("/signin")
