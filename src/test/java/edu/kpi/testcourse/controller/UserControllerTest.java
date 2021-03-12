@@ -2,10 +2,15 @@ package edu.kpi.testcourse.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import edu.kpi.testcourse.model.User;
+import edu.kpi.testcourse.repository.ActiveSessionRepository;
+import edu.kpi.testcourse.repository.ActiveSessionRepositoryImpl;
 import edu.kpi.testcourse.repository.UserRepository;
 import edu.kpi.testcourse.repository.UserRepositoryImpl;
 import io.micronaut.http.HttpRequest;
@@ -32,9 +37,17 @@ class UserControllerTest {
   @Inject
   UserRepository userRepository;
 
+  @Inject
+  ActiveSessionRepository activeSessionRepository;
+
   @MockBean(UserRepositoryImpl.class)
   UserRepository userRepo() {
     return mock(UserRepository.class);
+  }
+
+  @MockBean(ActiveSessionRepositoryImpl.class)
+  ActiveSessionRepository sessionRepo() {
+    return mock(ActiveSessionRepository.class);
   }
 
   @Test
@@ -46,6 +59,7 @@ class UserControllerTest {
 
     assertEquals(response.status(), HttpStatus.OK);
     Assertions.assertThat(response.body()).matches("\\{\"access_token\":\"[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\"}");
+    verify(activeSessionRepository).save(anyString());
   }
 
   @Test
@@ -57,5 +71,6 @@ class UserControllerTest {
 
     HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
     assertEquals(thrown.getStatus(), HttpStatus.UNAUTHORIZED);
+    verify(activeSessionRepository, never()).save(anyString());
   }
 }
