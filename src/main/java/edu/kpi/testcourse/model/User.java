@@ -1,11 +1,24 @@
 package edu.kpi.testcourse.model;
 
+import io.micronaut.core.annotation.Introspected;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * User model which contains info about user.
  */
+@Introspected
 public class User {
+
+  @NotBlank
+  @NotNull
   private String email;
+
+  @NotBlank
+  @NotNull
   private String password;
+
+  public User() {}
 
   public User(String email, String password) {
     this.email = email;
