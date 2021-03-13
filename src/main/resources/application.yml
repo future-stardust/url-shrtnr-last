@@ -12,3 +12,12 @@ micronaut:
           secret:
             generator:
               secret: supaDupaSecretThatNobodyWillKnow
+    endpoints:
+      login:
+        enabled: false
+
+db:
+  users:
+    filename: users.txt
+  sessions:
+    filename: sessions.txt
