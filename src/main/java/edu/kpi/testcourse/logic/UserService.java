@@ -12,10 +12,12 @@ import javax.inject.Singleton;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Inject
-  public UserService(UserRepository userRepository) {
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -28,6 +30,7 @@ public class UserService {
     if (userRepository.containsUserWithEmail(user.getEmail())) {
       throw new Exception(String.format("User with email='%s' already exists", user.getEmail()));
     }
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
   }
 }
