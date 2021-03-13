@@ -73,4 +73,27 @@ class UserControllerTest {
     assertEquals(thrown.getStatus(), HttpStatus.UNAUTHORIZED);
     verify(activeSessionRepository, never()).save(anyString());
   }
+
+  @Test
+  void testUserRegisterSuccessful() {
+    when(userRepository.containsUserWithEmail("user1@mail.com")).thenReturn(false);
+
+    HttpResponse<String> response = client.toBlocking()
+      .exchange(HttpRequest.POST("/users/signup", new User("user1@mail.com", "pass123")), String.class);
+
+    assertEquals(response.status(), HttpStatus.CREATED);
+  }
+
+  @Test
+  void testUserRegisterFailed() {
+    when(userRepository.containsUserWithEmail("user1@mail.com")).thenReturn(true);
+    User user = new User("user1@mail.com", "pass123");
+
+    Executable e = () -> client.toBlocking()
+      .exchange(HttpRequest.POST("/users/signup", user), String.class);
+
+    HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
+    assertEquals(thrown.getStatus(), HttpStatus.INTERNAL_SERVER_ERROR);
+    verify(userRepository, never()).save(user);
+  }
 }
