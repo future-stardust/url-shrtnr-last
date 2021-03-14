@@ -13,9 +13,16 @@ class PasswordEncoderTest {
   PasswordEncoder passwordEncoder;
 
   @Test
-  void test() {
+  void testPasswordMatchesAfterHashing() {
     String hashedPassword = passwordEncoder.encode("asdfghjkl");
 
     assertTrue(passwordEncoder.matches("asdfghjkl", hashedPassword));
+  }
+
+  @Test
+  void testHashedPasswordIsDifferentFromRaw() {
+    String hashedPassword = passwordEncoder.encode("asdfghjkl");
+
+    assertNotEquals("asdfghjkl", hashedPassword, "The hashed password must not be the same as the raw password.");
   }
 }

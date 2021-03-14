@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import edu.kpi.testcourse.logic.PasswordEncoder;
 import edu.kpi.testcourse.model.User;
 import edu.kpi.testcourse.repository.UserRepository;
 import edu.kpi.testcourse.repository.UserRepositoryImpl;
@@ -27,6 +28,8 @@ class AuthenticationProviderUserPasswordTest {
   AuthenticationProvider authenticationProvider;
   @Inject
   UserRepository userRepository;
+  @Inject
+  PasswordEncoder passwordEncoder;
 
   @MockBean(UserRepositoryImpl.class)
   UserRepository userRepo() {
@@ -35,7 +38,8 @@ class AuthenticationProviderUserPasswordTest {
 
   @Test
   void testAuthenticateSuccessful() {
-    when(userRepository.getUserByEmail("example@mail.com")).thenReturn(Optional.of(new User("example@mail.com", "pass123")));
+    when(userRepository.getUserByEmail("example@mail.com"))
+      .thenReturn(Optional.of(new User("example@mail.com", passwordEncoder.encode("pass123"))));
 
     AuthenticationRequest<String, String> authenticationRequest = mock(AuthenticationRequest.class);
     when(authenticationRequest.getIdentity()).thenReturn("example@mail.com");
@@ -58,7 +62,8 @@ class AuthenticationProviderUserPasswordTest {
 
   @Test
   void testAuthenticateFailedNoUserWithEmail() {
-    when(userRepository.getUserByEmail("example@mail.com")).thenReturn(Optional.of(new User("example@mail.com", "pass123")));
+    when(userRepository.getUserByEmail("example@mail.com"))
+      .thenReturn(Optional.of(new User("example@mail.com", passwordEncoder.encode("pass123"))));
 
     AuthenticationRequest<String, String> authenticationRequest = mock(AuthenticationRequest.class);
     when(authenticationRequest.getIdentity()).thenReturn("user@mail.com");
@@ -79,7 +84,8 @@ class AuthenticationProviderUserPasswordTest {
 
   @Test
   void testAuthenticateFailedIncorrectPassword() {
-    when(userRepository.getUserByEmail("example@mail.com")).thenReturn(Optional.of(new User("example@mail.com", "pass123")));
+    when(userRepository.getUserByEmail("example@mail.com"))
+      .thenReturn(Optional.of(new User("example@mail.com", passwordEncoder.encode("pass123"))));
 
     AuthenticationRequest<String, String> authenticationRequest = mock(AuthenticationRequest.class);
     when(authenticationRequest.getIdentity()).thenReturn("example@mail.com");
