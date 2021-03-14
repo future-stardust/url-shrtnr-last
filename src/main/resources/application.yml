@@ -12,9 +12,6 @@ micronaut:
           secret:
             generator:
               secret: supaDupaSecretThatNobodyWillKnow
-    endpoints:
-      login:
-        enabled: false
 
 db:
   users:
