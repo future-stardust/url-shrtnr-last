@@ -8,7 +8,7 @@ import javax.inject.Singleton;
  * A fake implementation of {@link UrlRepository}.
  * Only for the early stage of development, in the future it will be replaced.
  */
-@Singleton
+//@Singleton
 public class UrlRepositoryFakeImpl implements UrlRepository {
 
   @Override
