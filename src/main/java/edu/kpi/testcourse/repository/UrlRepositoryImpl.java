@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class UrlRepositoryImpl implements UrlRepository {
+  private final HashMap<String, UrlAlias> aliases = new HashMap<>();
 
   private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
   private final Map<String, UrlAlias> urls;
@@ -109,5 +111,20 @@ public class UrlRepositoryImpl implements UrlRepository {
       logger.error("Can not read urls from file");
       throw new Error("Error while reading urls from file");
     }
+  }
+
+  @Override
+  public void createUrlAlias(UrlAlias urlAlias) {
+    if (aliases.containsKey(urlAlias.alias())) {
+      throw new UrlRepository.AliasAlreadyExist();
+    }
+
+    aliases.put(urlAlias.alias(), urlAlias);
+  }
+
+  @Override
+  public @Nullable
+  UrlAlias findUrlAlias(String alias) {
+    return aliases.get(alias);
   }
 }
