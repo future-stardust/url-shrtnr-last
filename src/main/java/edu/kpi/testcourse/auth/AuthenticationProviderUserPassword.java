@@ -1,5 +1,6 @@
 package edu.kpi.testcourse.auth;
 
+import edu.kpi.testcourse.logic.PasswordEncoder;
 import edu.kpi.testcourse.model.User;
 import edu.kpi.testcourse.repository.UserRepository;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -26,10 +27,13 @@ import org.reactivestreams.Publisher;
 public class AuthenticationProviderUserPassword implements AuthenticationProvider {
 
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Inject
-  public AuthenticationProviderUserPassword(UserRepository userRepository) {
+  public AuthenticationProviderUserPassword(UserRepository userRepository,
+      PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
@@ -40,7 +44,8 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
     return Flowable.create(emitter -> {
       Optional<User> user = userRepository
           .getUserByEmail((String) authenticationRequest.getIdentity());
-      if (user.isPresent() && authenticationRequest.getSecret().equals(user.get().getPassword())) {
+      if (user.isPresent() && passwordEncoder
+          .matches((String) authenticationRequest.getSecret(), user.get().getPassword())) {
         emitter
           .onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));
         emitter.onComplete();
