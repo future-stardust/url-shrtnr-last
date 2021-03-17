@@ -12,7 +12,7 @@ public interface UrlRepository {
    *
    * @param urlAlias that you want to save
    */
-  void save(UrlAlias urlAlias);
+  void save(UrlAlias urlAlias) throws Exception;
 
   /**
    * Returns urls that user has saved.
