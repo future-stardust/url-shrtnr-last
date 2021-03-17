@@ -11,6 +11,13 @@ public final class UrlAlias {
   private final String originUrl;
   private final String ownerEmail;
 
+  /**
+   * Basic constructor for UrlAlias model.
+   *
+   * @param alias short version of origin url
+   * @param originUrl origin site url
+   * @param ownerEmail owner email of alias
+   */
   public UrlAlias(String alias, String originUrl, String ownerEmail) {
     this.alias = alias;
     this.originUrl = originUrl;
@@ -31,14 +38,16 @@ public final class UrlAlias {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj == this)
+    if (obj == this) {
       return true;
-    if (obj == null || obj.getClass() != this.getClass())
+    }
+    if (obj == null || obj.getClass() != this.getClass()) {
       return false;
+    }
     var that = (UrlAlias) obj;
-    return Objects.equals(this.alias, that.alias) &&
-      Objects.equals(this.originUrl, that.originUrl) &&
-      Objects.equals(this.ownerEmail, that.ownerEmail);
+    return Objects.equals(this.alias, that.alias)
+      && Objects.equals(this.originUrl, that.originUrl)
+      && Objects.equals(this.ownerEmail, that.ownerEmail);
   }
 
   @Override
@@ -48,9 +57,9 @@ public final class UrlAlias {
 
   @Override
   public String toString() {
-    return "UrlAlias[" +
-      "alias=" + alias + ", " +
-      "originUrl=" + originUrl + ", " +
-      "ownerEmail=" + ownerEmail + ']';
+    return "UrlAlias["
+      + "alias=" + alias + ", "
+      + "originUrl=" + originUrl + ", "
+      + "ownerEmail=" + ownerEmail + ']';
   }
 }
