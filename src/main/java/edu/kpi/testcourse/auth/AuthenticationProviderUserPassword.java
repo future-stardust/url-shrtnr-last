@@ -50,7 +50,9 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
           .onNext(new UserDetails((String) authenticationRequest.getIdentity(), new ArrayList<>()));
         emitter.onComplete();
       } else {
-        emitter.onError(new AuthenticationException(new AuthenticationFailed()));
+        emitter.onError(
+            new AuthenticationException(new AuthenticationFailed("Wrong username or password"))
+        );
       }
     }, BackpressureStrategy.ERROR);
   }
