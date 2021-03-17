@@ -18,7 +18,6 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import java.util.Optional;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -45,7 +44,7 @@ class UserControllerTest {
     HttpResponse<String> response = client.toBlocking()
       .exchange(HttpRequest.POST("/users/signup", new User("user1@mail.com", "pass123")), String.class);
 
-    assertEquals(response.status(), HttpStatus.CREATED);
+    assertEquals(HttpStatus.CREATED, response.status());
   }
 
   @Test
@@ -57,7 +56,7 @@ class UserControllerTest {
       .exchange(HttpRequest.POST("/users/signup", user), String.class);
 
     HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
-    assertEquals(thrown.getStatus(), HttpStatus.INTERNAL_SERVER_ERROR);
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     verify(userRepository, never()).save(user);
   }
 }
