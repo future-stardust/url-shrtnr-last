@@ -3,13 +3,10 @@ package edu.kpi.testcourse.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import edu.kpi.testcourse.model.User;
-import edu.kpi.testcourse.repository.UserRepository;
-import edu.kpi.testcourse.repository.UserRepositoryImpl;
+import edu.kpi.testcourse.repository.UrlRepository;
+import edu.kpi.testcourse.repository.UrlRepositoryImpl;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -23,40 +20,39 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 @MicronautTest
-class UserControllerTest {
+class RedirectControllerTest {
 
   @Inject
   @Client("/")
   RxHttpClient client;
 
   @Inject
-  UserRepository userRepository;
+  UrlRepository urlRepository;
 
-  @MockBean(UserRepositoryImpl.class)
-  UserRepository userRepo() {
-    return mock(UserRepository.class);
+  @MockBean(UrlRepositoryImpl.class)
+  UrlRepository urlRepo() {
+    return mock(UrlRepository.class);
   }
 
   @Test
-  void testUserRegisterSuccessful() {
-    when(userRepository.containsUserWithEmail("user1@mail.com")).thenReturn(false);
+  void testRedirectedSuccessfully() {
+    when(urlRepository.getOriginUrl("k")).thenReturn("https://kpi.ua/");
 
     HttpResponse<String> response = client.toBlocking()
-      .exchange(HttpRequest.POST("/users/signup", new User("user1@mail.com", "pass123")), String.class);
+      .exchange(HttpRequest.GET("/r/k"), String.class);
 
-    assertEquals(HttpStatus.CREATED, response.status());
+    assertEquals(HttpStatus.OK, response.status());
   }
 
   @Test
-  void testUserRegisterFailed() {
-    when(userRepository.containsUserWithEmail("user1@mail.com")).thenReturn(true);
-    User user = new User("user1@mail.com", "pass123");
+  void testRedirectFailed() {
+    when(urlRepository.getOriginUrl("g")).thenReturn(null);
 
     Executable e = () -> client.toBlocking()
-      .exchange(HttpRequest.POST("/users/signup", user), String.class);
+      .exchange(HttpRequest.GET("/r/g"), String.class);
 
     HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
-    verify(userRepository, never()).save(user);
+    assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    assertEquals("no url corresponds to given alias", thrown.getResponse().body());
   }
 }
