@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 @Singleton
 public class UrlRepositoryImpl implements UrlRepository {
-  private final HashMap<String, UrlAlias> aliases = new HashMap<>();
 
   private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
   private final Map<String, UrlAlias> urls;
