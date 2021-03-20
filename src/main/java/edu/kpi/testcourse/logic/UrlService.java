@@ -24,6 +24,29 @@ public class UrlService {
   }
 
   /**
+   * Create a new URL alias (shortened version).
+   *
+   * @param email an email of a user that creates the alias
+   * @param url a full URL
+   * @param alias a proposed alias
+   *
+   * @return a shortened URL
+   */
+  public String createNewAlias(String email, String url, String alias) throws Exception {
+    String finalAlias;
+    if (alias == null || alias.isEmpty()) {
+      // TODO: Generate short alias
+      throw new UnsupportedOperationException("Is not implemented yet");
+    } else {
+      finalAlias = alias;
+    }
+
+    urlRepository.save(new UrlAlias(finalAlias, url, email));
+
+    return finalAlias;
+  }
+
+  /**
    * Remove the alias of the specified user.
    *
    * @param alias to be deleted
