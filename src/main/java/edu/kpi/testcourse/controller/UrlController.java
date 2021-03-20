@@ -11,6 +11,8 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.server.util.HttpHostResolver;
 import io.micronaut.security.annotation.Secured;
@@ -20,13 +22,11 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Controller that handles requests to /urls/*.
  */
-
-@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/urls")
+@Secured(SecurityRule.IS_AUTHENTICATED)
 public class UrlController {
 
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -46,6 +46,14 @@ public class UrlController {
     this.urlService = urlService;
     this.httpHostResolver = httpHostResolver;
     this.json = json;
+  }
+
+  @Delete("/{alias}")
+  HttpResponse<?> deleteUrl(@PathVariable String alias, Principal principal) {
+    logger.info("Processing DELETE /urls/{} request", alias);
+    return urlService.deleteUserUrl(alias, principal.getName())
+      ? HttpResponse.noContent()
+      : HttpResponse.notFound();
   }
 
   /**
@@ -71,4 +79,3 @@ public class UrlController {
     }
   }
 }
-
