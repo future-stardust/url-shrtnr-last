@@ -1,8 +1,6 @@
 package edu.kpi.testcourse.repository;
 
 import edu.kpi.testcourse.model.UrlAlias;
-
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**

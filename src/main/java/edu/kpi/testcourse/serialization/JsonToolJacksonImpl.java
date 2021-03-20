@@ -3,9 +3,8 @@ package edu.kpi.testcourse.serialization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.inject.Singleton;
 import java.lang.reflect.Type;
+import javax.inject.Singleton;
 
 /**
  * JSON serialization tool that uses Jackson as engine.

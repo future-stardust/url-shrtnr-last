@@ -9,6 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @param alias an alias ({base URL shortener URL}/{alias})
  */
 public record UrlShortenRequest(
-  @JsonProperty("url") String url,
-  @JsonProperty("alias") String alias) {
+    @JsonProperty("url") String url,
+    @JsonProperty("alias") String alias) {
 }
