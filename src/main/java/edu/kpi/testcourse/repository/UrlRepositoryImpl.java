@@ -70,10 +70,7 @@ public class UrlRepositoryImpl implements UrlRepository {
   @Override
   public String getOriginUrl(String alias) {
     UrlAlias urlAlias = urls.get(alias);
-    if (urlAlias == null) {
-      throw new Error("Alias does not exist");
-    }
-    return urlAlias.originUrl();
+    return urlAlias == null ? null : urlAlias.originUrl();
   }
 
   private void writeUrlsToFile() {
