@@ -112,19 +112,4 @@ public class UrlRepositoryImpl implements UrlRepository {
       throw new Error("Error while reading urls from file");
     }
   }
-
-  @Override
-  public void createUrlAlias(UrlAlias urlAlias) {
-    if (aliases.containsKey(urlAlias.alias())) {
-      throw new UrlRepository.AliasAlreadyExist();
-    }
-
-    aliases.put(urlAlias.alias(), urlAlias);
-  }
-
-  @Override
-  public @Nullable
-  UrlAlias findUrlAlias(String alias) {
-    return aliases.get(alias);
-  }
 }

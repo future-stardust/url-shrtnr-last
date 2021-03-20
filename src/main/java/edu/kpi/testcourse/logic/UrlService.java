@@ -2,7 +2,6 @@ package edu.kpi.testcourse.logic;
 
 import edu.kpi.testcourse.model.UrlAlias;
 import edu.kpi.testcourse.repository.UrlRepository;
-import edu.kpi.testcourse.repository.UrlRepository.AliasAlreadyExist;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,7 +27,7 @@ public class UrlService {
    *
    * @return a shortened URL
    */
-  public String createNewAlias(String email, String url, String alias) throws AliasAlreadyExist {
+  public String createNewAlias(String email, String url, String alias) throws Exception {
     String finalAlias;
     if (alias == null || alias.isEmpty()) {
       // TODO: Generate short alias
@@ -37,7 +36,7 @@ public class UrlService {
       finalAlias = alias;
     }
 
-    urls.createUrlAlias(new UrlAlias(finalAlias, url, email));
+    urls.save(new UrlAlias(finalAlias, url, email));
 
     return finalAlias;
   }
