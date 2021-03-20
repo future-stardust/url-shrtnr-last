@@ -2,6 +2,7 @@ package edu.kpi.testcourse.repository;
 
 import static edu.kpi.testcourse.repository.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.kpi.testcourse.model.UrlAlias;
@@ -54,8 +55,7 @@ class UrlRepositoryTest {
 
     urlRepository.remove("g");
 
-    Error error = assertThrows(Error.class, () -> urlRepository.getOriginUrl("g"));
-    assertEquals("Alias does not exist", error.getMessage());
+    assertNull(urlRepository.getOriginUrl("g"));
   }
 
   @AfterAll
