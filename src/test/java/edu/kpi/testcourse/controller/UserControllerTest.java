@@ -2,11 +2,13 @@ package edu.kpi.testcourse.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.kpi.testcourse.model.ErrorResponse;
 import edu.kpi.testcourse.model.User;
 import edu.kpi.testcourse.repository.UserRepository;
 import edu.kpi.testcourse.repository.UserRepositoryImpl;
@@ -18,6 +20,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import java.util.Optional;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -56,7 +59,11 @@ class UserControllerTest {
       .exchange(HttpRequest.POST("/users/signup", user), String.class);
 
     HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, e);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
+    Optional<ErrorResponse> responseBody = thrown.getResponse().getBody(ErrorResponse.class);
+    assertTrue(responseBody.isPresent(), "The response body must not be null");
+    assertEquals(2, responseBody.get().reasonCode());
+    assertEquals("Email is already used", responseBody.get().reasonText());
     verify(userRepository, never()).save(user);
   }
 }

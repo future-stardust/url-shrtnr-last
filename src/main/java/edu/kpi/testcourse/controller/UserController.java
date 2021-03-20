@@ -35,7 +35,7 @@ public class UserController {
 
   @Post("/signup")
   @Secured(SecurityRule.IS_ANONYMOUS)
-  HttpResponse<?> signUp(@Valid @Body User user) throws Exception {
+  HttpResponse<?> signUp(@Valid @Body User user) {
     logger.info("Processing POST /users/signup request");
     userService.registerUser(user);
     return HttpResponse.status(HttpStatus.CREATED);
