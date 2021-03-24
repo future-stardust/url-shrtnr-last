@@ -1,8 +1,11 @@
 package edu.kpi.testcourse.logic;
 
+import edu.kpi.testcourse.model.Alias;
 import edu.kpi.testcourse.model.UrlAlias;
+import edu.kpi.testcourse.model.Urls;
 import edu.kpi.testcourse.repository.UrlRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -27,9 +30,8 @@ public class UrlService {
    * Create a new URL alias (shortened version).
    *
    * @param email an email of a user that creates the alias
-   * @param url a full URL
+   * @param url   a full URL
    * @param alias a proposed alias
-   *
    * @return a shortened URL
    */
   public String createNewAlias(String email, String url, String alias) throws Exception {
@@ -63,5 +65,22 @@ public class UrlService {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns list of aliases belonging to the user with the given email.
+   *
+   * @param email email of user that wants to see his saved aliases
+   * @param hostName URL of shortener
+   * @return list of urls
+   */
+  public Urls getUserUrls(String email, String hostName) {
+    return new Urls(
+      urlRepository.getUserUrls(email)
+        .stream()
+        .map(urlAlias -> new Alias(urlAlias.originUrl(), urlAlias.alias(),
+          hostName + "/r/" + urlAlias.alias()))
+        .collect(Collectors.toUnmodifiableList())
+    );
   }
 }

@@ -12,6 +12,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.server.util.HttpHostResolver;
@@ -77,5 +78,12 @@ public class UrlController {
         json.toJson(new ErrorResponse(1, "Alias is already taken"))
       );
     }
+  }
+
+  @Get
+  HttpResponse<?> getUserUrls(Principal principal, HttpRequest<?> httpRequest) {
+    logger.info("Processing GET /urls request");
+    String baseUrl = httpHostResolver.resolve(httpRequest);
+    return HttpResponse.ok(urlService.getUserUrls(principal.getName(), baseUrl));
   }
 }
