@@ -5,6 +5,7 @@ import edu.kpi.testcourse.model.UrlAlias;
 import edu.kpi.testcourse.model.Urls;
 import edu.kpi.testcourse.repository.UrlRepository;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,13 +38,17 @@ public class UrlService {
   public String createNewAlias(String email, String url, String alias) throws Exception {
     String finalAlias;
     if (alias == null || alias.isEmpty()) {
-      // TODO: Generate short alias
-      throw new UnsupportedOperationException("Is not implemented yet");
+      finalAlias = generateAlias();
     } else {
       finalAlias = alias;
     }
 
-    urlRepository.save(new UrlAlias(finalAlias, url, email));
+    try {
+      urlRepository.save(new UrlAlias(finalAlias, url, email));
+    } catch (Exception e) {
+      finalAlias = generateAlias();
+      urlRepository.save(new UrlAlias(finalAlias, url, email));
+    }
 
     return finalAlias;
   }
@@ -65,6 +70,18 @@ public class UrlService {
       }
     }
     return false;
+  }
+
+  private String generateAlias() {
+    int leftLimit = 97; // letter 'a'
+    int rightLimit = 122; // letter 'z'
+    int stringLength = 5;
+    Random random = new Random();
+
+    return random.ints(leftLimit, rightLimit + 1)
+      .limit(stringLength)
+      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+      .toString();
   }
 
   /**

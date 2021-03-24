@@ -7,6 +7,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.kpi.testcourse.exception.UserAlreadyExists;
 import edu.kpi.testcourse.model.User;
 import edu.kpi.testcourse.repository.UserRepository;
 import edu.kpi.testcourse.repository.UserRepositoryImpl;
@@ -47,8 +48,8 @@ class UserServiceTest {
 
     Executable e = () -> userService.registerUser(user);
 
-    Exception exception = assertThrows(Exception.class, e);
-    assertThat(exception.getMessage()).contains("User with email='user' already exists");
+    UserAlreadyExists exception = assertThrows(UserAlreadyExists.class, e);
+    assertThat(exception.getMessage()).contains("Email is already used");
     verify(userRepository, never()).save(user);
   }
 }
