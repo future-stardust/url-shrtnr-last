@@ -1,5 +1,6 @@
 package edu.kpi.testcourse.logic;
 
+import edu.kpi.testcourse.exception.UserAlreadyExists;
 import edu.kpi.testcourse.model.User;
 import edu.kpi.testcourse.repository.UserRepository;
 import javax.inject.Inject;
@@ -24,11 +25,10 @@ public class UserService {
    * Performs user registration.
    *
    * @param user who wants to register
-   * @throws Exception if user is already registered
    */
-  public void registerUser(User user) throws Exception {
+  public void registerUser(User user) {
     if (userRepository.containsUserWithEmail(user.getEmail())) {
-      throw new Exception(String.format("User with email='%s' already exists", user.getEmail()));
+      throw new UserAlreadyExists();
     }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userRepository.save(user);
